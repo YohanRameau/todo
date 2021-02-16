@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Todo App</title>
+  </head>
+  <body>
+    <h1>Sections Index</h1>
+    <ul>
+      {% for s in section_list %}
+      <h1><a href="{% url 'task:section' s.name %}">{{s.name}}</a></h1>
+      {% for t in s.tasks %}
+      <a href="{% url 'task:task' s.name t.name %}">{{t}}</a>
+      {% endfor %} {% endfor %}
+    </ul>
+
+    <!-- Create a new section, maybe add the possibility to add,
+    the new section on the same ul block as the others sections
+    and doing the same with their task, with the possibility to
+    add one new task per section, actualize and have a view of the index
+    page with the new task/section... -->
+    <h1>New Section</h1>
+    <form action="" method="post"></form>
+  </body>
+</html>
