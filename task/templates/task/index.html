@@ -7,11 +7,25 @@
   </head>
   <body>
     <h1>Sections Index</h1>
-    <ul>
+    <ul style="list-style-type: none">
+      <form action="{% url 'task:create_section' %}" method="post">
+        {% csrf_token %}
+        <label for="section_name">Section name :</label>
+        <input type="text" name="section_name" id="section_name" />
+        <input type="submit" value="valid new section" />
+      </form>
       {% for s in section_list %}
       <h1><a href="{% url 'task:section' s.name %}">{{s.name}}</a></h1>
+      <form action="{% url 'task:create_task' %}" method="post">
+        {% csrf_token %}
+        <label for="task_name">Task name :</label>
+        <input type="text" name="task_name" id="task_name" />
+        <label for="task_date">Task deadline (optional) :</label>
+        <input type="datetime" name="task_date" id="task_date" />
+        <input type="submit" value="valid new task" />
+      </form>
       {% for t in s.tasks %}
-      <a href="{% url 'task:task' s.name t.name %}">{{t}}</a>
+      <li><a href="{% url 'task:task' s.name t.name %}">{{t}}</a></li>
       {% endfor %} {% endfor %}
     </ul>
 
@@ -20,7 +34,5 @@
     and doing the same with their task, with the possibility to
     add one new task per section, actualize and have a view of the index
     page with the new task/section... -->
-    <h1>New Section</h1>
-    <form action="" method="post"></form>
   </body>
 </html>
