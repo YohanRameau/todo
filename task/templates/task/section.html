@@ -1,1 +1,28 @@
-{{section}}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{section.name}}</title>
+  </head>
+  <body>
+    <h1>{{section.name}}</h1>
+    <ul style="list-style-type: none">
+      <li>
+        <form action="{% url 'task:create_task' %}" method="post">
+          {% csrf_token %}
+          <label for="task_name">Task name :</label>
+          <input type="text" name="task_name" id="task_name" />
+          <label for="task_date">Task deadline (optional) :</label>
+          <input type="datetime" name="task_date" id="task_date" />
+          <input type="hidden" name="section_name" value="{{section.name}}" />
+          <input type="submit" value="valid new task" />
+        </form>
+      </li>
+      {% for t in tasks %}
+      <li><a href="{% url 'task:task' section.name t.name %}">{{t}}</a></li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>

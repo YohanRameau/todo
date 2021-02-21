@@ -13,7 +13,8 @@ class Section(models.Model):
     """
     name = models.CharField(max_length=200,unique=True)
     pub_date = models.DateTimeField(default=timezone.now)
-
+    ordering=['pub_date']
+    
     def __str__(self):
         return self.name
     
@@ -65,4 +66,4 @@ class Task(models.Model):
         :rtype: bool
         """
         
-        return timezone.now() <= self.deadline
+        return timezone.now() <= self.deadline if self.deadline is not None else False 
