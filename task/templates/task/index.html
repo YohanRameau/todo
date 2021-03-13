@@ -1,43 +1,92 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Todo App</title>
-  {% load static %}
-  <link rel="stylesheet" type="text/css" href="{% static 'task/style.css' %}">
-  </head>
-  <body>
-    <h1>Sections Index</h1>
-    <ul style="list-style-type: none">
-      <form action="{% url 'task:create_section' %}" method="post">
-        {% csrf_token %}
-        <label for="section_name">Section name :</label>
-        <input type="text" name="section_name" id="section_name" />
-        <input type="submit" value="valid new section" />
-      </form>
-      {% for s in section_list %}
-      <h1><a href="{% url 'task:section' s.name %}">{{s.name}}</a></h1>
-      <li>
-        <form action="{% url 'task:create_task' %}" method="post">
-          {% csrf_token %}
-          <label for="task_name">Task name :</label>
-          <input type="text" name="task_name" id="task_name" />
-          <label for="task_date">Task deadline (optional) :</label>
-          <input type="datetime" name="task_date" id="task_date" />
-          <input type="hidden" name="section_name" value="{{s.name}}" />
-          <input type="submit" value="valid new task" />
-        </form>
-      </li>
-      {% for t in s.tasks %}
-      <li><a href="{% url 'task:task' s.name t.name %}">{{t}}</a></li>
-      {% endfor %} {% endfor %}
-    </ul>
+{% extends 'task/base.html' %}
+{% block content %}
+<div class="container">
+<div class="md-8">
+{% if messages %}
+  {% for message in messages %}
+    <div class="alert alert-{{message.tags}}">
+      {{message}}
+    </div>
+  {% endfor %}
+{% endif %}
+</div>
+  <div class="accordion" id="accordionExample">
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="newSectionHeading">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse0"
+          aria-expanded="true" aria-controls="collapse0">
+          Add New Section
+        </button>
+      </h2>
+      <div id="collapse0" class="accordion-collapse collapse show" aria-labelledby="newSectionHeading"
+        data-bs-parent="#accordionExample">
+        <div class="accordion-body">
+          <form action="{% url 'task:create_section' %}" method="post">
+            {% csrf_token %}
+            <div class="input-group mb-3">
+              <input type="text" class="form-control" placeholder="Section name" aria-label="Recipient's username"
+                aria-describedby="button-addon2" name="section_name" id="section_name">
+              <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Valid</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% for s in section_list %}
 
-    <!-- Create a new section, maybe add the possibility to add,
-    the new section on the same ul block as the others sections
-    and doing the same with their task, with the possibility to
-    add one new task per section, actualize and have a view of the index
-    page with the new task/section... -->
-  </body>
-</html>
+    <div class="accordion-item">
+
+      <div class="accordion-header" id="heading{{forloop.counter}}">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+          data-bs-target="#collapse{{forloop.counter}}" aria-expanded="true"
+          aria-controls="collapse{{forloop.counter}}">
+          <a href="{% url 'task:section' s.name %}">{{s.name}} </a>
+        </button>
+      </div>
+      <div id="collapse{{forloop.counter}}" class="accordion-collapse collapse show"
+        aria-labelledby="heading{{forloop.counter}}" data-bs-parent="#accordionExample">
+        <div class="accordion-body">
+          <div class="card">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item">
+                <form class="row" action="{% url 'task:create_task' %}" method="post">
+                  {% csrf_token %}
+                  <div class="col">
+                    <input type="text" name="task_name" class="form-control" id="task_name" />
+                  </div>
+                  <div class="col">
+                    <input type="date" name="task_date" class="form-control" id="task_date" />
+                    <input type="hidden" name="section_name" class="form-control" value="{{s.name}}" />
+                  </div>
+                  <div class="col">
+                    <input type="submit" class="form-control" value="valid new task" />
+                  </div>
+                </form>
+              </li>
+              {% for t in s.tasks %}
+              <li class="list-group-item">
+                <div class="input-group">
+                  <input type="text" readonly class="form-control" value="{{ t.name  }}">
+                  <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                    aria-expanded="false"></button>
+                  <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="{% url 'task:delete_task' s.name t.name %}">Remove</a></li>
+                    <li>
+                      <hr class="dropdown-divider">
+                    </li>
+                    <li><a class="dropdown-item" href="{% url 'task:task' s.name t.name %}">Edit</a></li>
+                  </ul>
+                </div>
+              </li>
+              {% endfor %}
+            </ul>
+            <a href="{% url 'task:delete_section' s.name %}" class="btn btn-primary btn-danger">Delete {{s.name}}</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock content %}

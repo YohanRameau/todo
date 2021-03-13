@@ -1,28 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{{section.name}}</title>
-  </head>
-  <body>
-    <h1>{{section.name}}</h1>
-    <ul style="list-style-type: none">
-      <li>
-        <form action="{% url 'task:create_task' %}" method="post">
-          {% csrf_token %}
-          <label for="task_name">Task name :</label>
-          <input type="text" name="task_name" id="task_name" />
-          <label for="task_date">Task deadline (optional) :</label>
-          <input type="datetime" name="task_date" id="task_date" />
-          <input type="hidden" name="section_name" value="{{section.name}}" />
-          <input type="submit" value="valid new task" />
-        </form>
-      </li>
-      {% for t in tasks %}
-      <li><a href="{% url 'task:task' section.name t.name %}">{{t}}</a></li>
-      {% endfor %}
-    </ul>
-  </body>
-</html>
+{% extends 'task/base.html' %}
+{% block content %}
+<div class="card">
+  <div class="card-header">{{section.name}} <a href="{% url 'task:delete_section' section.name %}" class=" btn btn-primary btn-danger" style="float: right">Delete </a>
+</div>
+  <ul style="list-group list-group-flush">
+    <li class="list-group-item">
+      <form class="row" action="{% url 'task:create_task' %}" method="post">
+        {% csrf_token %}
+        <div class="col">
+          <input type="text" name="task_name" class="form-control" id="task_name" />
+        </div>
+        <div class="col">
+          <input type="date" name="task_date" class="form-control" id="task_date" />
+          <input type="hidden" name="section_name" class="form-control" value="{{section.name}}" />
+        </div>
+        <div class="col">
+          <input type="submit" class="form-control" value="valid new task" />
+        </div>
+      </form>
+    </li>
+    {% for t in tasks %}
+    <li class="list-group-item">
+      <div class="input-group">
+        <input type="text" readonly class="form-control" value="{{ t.name  }}">
+        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+          aria-expanded="false"></button>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li><a class="dropdown-item" href="{% url 'task:delete_task' section.name t.name %}">Remove</a></li>
+          <li>
+            <hr class="dropdown-divider">
+          </li>
+          <li><a class="dropdown-item" href="{% url 'task:task' section.name t.name %}">Edit</a></li>
+        </ul>
+      </div>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock content %}

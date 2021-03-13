@@ -1,0 +1,27 @@
+{% extends 'task/base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col" >
+            <div class="card">
+                <form method="POST">
+                    {% csrf_token %}
+                    <fieldset class="form-group">
+                        <legend> User Registration</legend>
+                        {{ form|crispy }}
+                    </fieldset>
+                    <div class="form-group">
+                        <button class="btn btn-outline-success" type="submit">Sign Up</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                Already have an account ? <a class="ml-2" href="#">Sign in</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content%}

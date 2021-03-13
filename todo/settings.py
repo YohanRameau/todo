@@ -25,19 +25,21 @@ SECRET_KEY = ')^r03xpggphf!t+dgxt4!h)lqa-uj#+4=kx8xn571%4erq8l-s'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS: list = []
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'task.apps.TaskConfig',
+    'users.apps.UsersConfig',
+    'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'task.apps.TaskConfig',
+    'django.contrib.staticfiles',  
 ]
 
 MIDDLEWARE = [
@@ -123,3 +125,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
